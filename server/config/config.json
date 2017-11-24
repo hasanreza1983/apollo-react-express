@@ -1,0 +1,28 @@
+{
+  "development": {
+    "username": "root",
+    "password": "root",
+    "database": "phone_book",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "define":{   
+        "underscored": true,
+        "freezeTableName": true,
+        "timestamps":true
+    }
+  },
+  "test": {
+    "username": "root",
+    "password": "root",
+    "database": "phone_book",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "root",
+    "database": "phone_book",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
