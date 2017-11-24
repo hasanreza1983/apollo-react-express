@@ -33,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
     });
 
     userPhone.associate = function(models) {
-        userPhone.belongsTo(models.user, { foreignKey: "user_id",  foreignKeyConstraint:false });
+        userPhone.belongsTo(models.user, { foreignKey: "user_id" });
     };
 
     return userPhone;

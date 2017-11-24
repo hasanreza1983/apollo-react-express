@@ -44,5 +44,19 @@ module.exports = function(sequelize, DataTypes) {
         user.hasMany(models.userPhone, { foreignKey: "user_id" });
     };
 
+    user.classMethods =  (models) => {
+        upsertWithReturn:  (options) => {
+            return this.findOrCreate(options).spread(function (row, created) {
+                if (created) {
+                    return [row, created];
+                } else {
+                    return row.updateAttributes(options.defaults).then(function (updated) {
+                        return [updated, created];
+                    });
+                }
+            });
+        }
+    };
+
     return user;
 };

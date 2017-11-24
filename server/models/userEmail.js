@@ -32,7 +32,7 @@ module.exports = function(sequelize, DataTypes) {
     });
 
     userEmail.associate = function(models) {
-        userEmail.belongsTo(models.user, { foreignKey: "user_id" ,  foreignKeyConstraint:false});
+        userEmail.belongsTo(models.user, { foreignKey: "user_id"});
     };
 
     return userEmail;
