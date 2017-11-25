@@ -6,6 +6,15 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 
 class UserList extends React.Component {
+   
+   constructor() {
+        super();
+
+        this.state = {selected: undefined};
+
+    }
+
+
     render() {
         const users = this.props.data.getUserList;
         var columns = [{
@@ -30,7 +39,9 @@ class UserList extends React.Component {
                 }
             }
         ];
-        return ( <ReactTable data = { users } columns = { columns } />
+
+        return ( <ReactTable 
+            data = { users } columns = { columns }  />
         );
     }
 }
