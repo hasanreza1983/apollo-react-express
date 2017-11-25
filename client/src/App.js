@@ -1,13 +1,11 @@
 import * as React from 'react'
-import { render } from 'react-dom'
  
 import ApolloClient from 'apollo-client'
 import { HttpLink, InMemoryCache } from 'apollo-client-preset'
-import { ApolloProvider, graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+import { ApolloProvider } from 'react-apollo'
  
 
-import ChannelsListWithData from './components/ChannelsListWithData';
+import UserList from './components/UserList';
 
 const isNotProduction = process.env.NODE_ENV !== 'production';
 const uri = isNotProduction ? 'http://localhost:3001/graphql' : process.env.REACT_APP_GRAPHQL_URI;
@@ -23,15 +21,13 @@ const client = new ApolloClient({
   cache: new InMemoryCache().restore({})
 })
 
-
 console.log('client', client);
-
 
 const App = () => (
   <ApolloProvider client={client}>
     <div className="App">
-      <h3>Apollo-React</h3>
-      <ChannelsListWithData />    
+      <h3>User Contact Management</h3>
+      <UserList />    
     </div>
   </ApolloProvider>
 );
