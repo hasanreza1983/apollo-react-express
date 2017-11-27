@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import PageNotFound from './common/PageNotFound';
 
 import AddUser from './AddUser';
@@ -18,9 +18,9 @@ const App = () => {
                 <div>    
                  <HeaderNavContainer />          
                     <Switch>
-                        <Route exact path="/" component={UserList} />                        
-                        <Route exact path="/addUser" component={AddUser} />   
-                        <Route exact path="/about" component={About} />                     
+                        <Route exact path="/" component={UserList} /> 
+                        <Route path="/addUser/:id?" component={AddUser} />                        
+                        <Route exact path="/about" component={About} />
                         <Route component={PageNotFound} />
                     </Switch>
                 </div>

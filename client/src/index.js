@@ -10,8 +10,8 @@ const isNotProduction = process.env.NODE_ENV !== 'production';
 const uri = isNotProduction ? 'http://localhost:3001/graphql' : process.env.REACT_APP_GRAPHQL_URI;
 
 // Log
-console.log('process.env.NODE_ENV', process.env.NODE_ENV);
-console.log('GRAPHQL_URI', uri);
+//console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+//console.log('GRAPHQL_URI', uri);
 
 // Apollo client
 const client = new ApolloClient({
@@ -19,7 +19,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache().restore({})
 })
 
-console.log('client', client);
+//console.log('client : ', client);
 
 ReactDOM.render(
  	<ApolloProvider client={client}>

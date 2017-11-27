@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 
-
 const PageNotFound = ({location}) => {
     return (
         <div className="jumbotron">
@@ -9,12 +8,6 @@ const PageNotFound = ({location}) => {
             <p>No match for the link <code>{location.pathname}</code></p>
         </div>
     );
-};
-
-
-
-PageNotFound.propTypes = {
-    location: PropTypes.object.isRequired
 };
 
 export default PageNotFound;

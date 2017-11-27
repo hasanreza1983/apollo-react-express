@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { graphql,compose} from 'react-apollo';
+import { graphql,compose, withApollo} from 'react-apollo';
 import gql from 'graphql-tag';
+import { withRouter } from 'react-router';
 
 const inputParsers = {
   date(input) {
@@ -16,6 +17,23 @@ const inputParsers = {
 };
 
 class AddUser extends React.Component {
+     constructor(props) {
+        super(props);        
+    }
+
+async componentDidMount() {
+	
+
+  const users =  await this.props.client.query({
+    query: getUserQuery,        
+    variables: {
+        id: this.props.match.params.id
+    }       
+  });
+	
+  console.log(users.data.getUser);
+  
+  }
    
   handleSubmit = async (event) => {
     event.preventDefault();
@@ -82,6 +100,7 @@ class AddUser extends React.Component {
         }
       })
     }
+
     console.log(response.data);
     this.props.history.push('/');
   }
@@ -147,7 +166,28 @@ mutation ( $name: String!, $username: String!, $password: String!, $dob: String!
 }
 `;
 
-export default compose(
-  graphql(addUserMutation, { name: 'addUserMutation' }),
-  graphql(updateUserMutation, { name: 'updateUserMutation' })  
-)(AddUser)
+const getUserQuery = gql `
+query getUser ($id :Int){
+  getUser(id:$id) {
+    id
+    username
+    dob
+    sex
+    userEmails{
+      email
+    }
+    userPhones{
+      phone
+    }
+  }
+}
+`;
+
+export default compose( 
+    graphql(addUserMutation, {
+        name: 'addUserMutation'
+    }),
+    graphql(updateUserMutation, {
+        name: 'updateUserMutation'
+    })
+)(withApollo(AddUser));

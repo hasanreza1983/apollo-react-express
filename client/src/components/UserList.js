@@ -1,5 +1,7 @@
 import React from 'react';
-import { gql, graphql } from 'react-apollo';
+import { gql, graphql, compose } from 'react-apollo';
+import { Link} from 'react-router-dom';
+
 
 // Import React Table
 import ReactTable from "react-table";
@@ -13,7 +15,8 @@ class UserList extends React.Component {
     }
 
     render() {
-        const users = this.props.data.getUserList;
+
+        const users = this.props.allUsers.getUserList;
         var columns = [{
                 Header: 'ID',
                 accessor: 'id'
@@ -44,23 +47,23 @@ class UserList extends React.Component {
                     return phoneData.join(" | ");
                 }
             },
-
             {
                 Header: 'Action',
                 accessor: 'action',
                 Cell: props => {   
-                console.log(props.original.id);                 
-                    return <button data-action="edit">Edit { props.original.id}</button>;
+                //let id = props.original.id; 
+                   //return  <Link data-action="edit" to={'addUser/'+ props.original.id } > Edit {props.original.id}</Link>
+                   return <Link to={`addUser/${props.original.id}`}>Edit {props.original.id}</Link>
                 }
             }
         ];
 
-        return ( <ReactTable  data = { users } columns = { columns }  />
+        return ( <ReactTable className="-striped -highlight"  data = { users } columns = { columns }  />
         );
     }
 }
 
-const usersListQuery = gql `
+const getUserListQuery = gql `
   query {
   getUserList {
     id
@@ -77,4 +80,6 @@ const usersListQuery = gql `
 }
 `;
 
-export default graphql(usersListQuery)(UserList);
+export default compose(  
+  graphql(getUserListQuery, { name: 'allUsers' })  
+)(UserList)
