@@ -1,5 +1,7 @@
 import React from 'react';
-import { gql, graphql } from 'react-apollo';
+import { gql, graphql, compose } from 'react-apollo';
+import { Link} from 'react-router-dom';
+
 
 // Import React Table
 import ReactTable from "react-table";
@@ -12,11 +14,21 @@ class UserList extends React.Component {
         this.state = {selected: undefined};
     }
 
+    componentWillReceiveProps(nextProps){
+      console.log(nextProps);
+    }
+
+
     render() {
-        const users = this.props.data.getUserList;
+
+        const users = this.props.allUsers.getUserList;
         var columns = [{
                 Header: 'ID',
                 accessor: 'id'
+            },
+            {
+                Header: 'Name',
+                accessor: 'name'
             },
             {
                 Header: 'User Name',
@@ -44,26 +56,34 @@ class UserList extends React.Component {
                     return phoneData.join(" | ");
                 }
             },
-
             {
                 Header: 'Action',
-                accessor: 'action',
-                Cell: props => {   
-                console.log(props.original.id);                 
-                    return <button data-action="edit">Edit { props.original.id}</button>;
-                }
+                accessor: 'action',   
+               Cell: props => (
+                  <span>
+                    <Link to={`addUser/${props.original.id}`}>Edit {props.original.id}</Link>
+                    &nbsp;&nbsp;| &nbsp;&nbsp;<Link to={`addUser/${props.original.id}`}>Delete {props.original.id}</Link>
+                  </span>
+                )
             }
         ];
 
-        return ( <ReactTable  data = { users } columns = { columns }  />
+        return ( <ReactTable 
+                filterable  
+                defaultPageSize={5}   
+                className="-striped -highlight" 
+                data = { users } 
+                columns = { columns } 
+            />
         );
     }
 }
 
-const usersListQuery = gql `
+const getUserListQuery = gql `
   query {
   getUserList {
     id
+    name
     username
     dob
     sex
@@ -77,4 +97,6 @@ const usersListQuery = gql `
 }
 `;
 
-export default graphql(usersListQuery)(UserList);
+export default compose(  
+  graphql(getUserListQuery, { name: 'allUsers' })  
+)(UserList)

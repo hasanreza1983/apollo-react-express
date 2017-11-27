@@ -1,58 +1,90 @@
 import React, { Component } from 'react';
-import { graphql,compose} from 'react-apollo';
+import { graphql,compose, withApollo} from 'react-apollo';
 import gql from 'graphql-tag';
+//import {withRouter} from 'react-router';
+import PropTypes from 'prop-types';
 
-const inputParsers = {
-  date(input) {
-    const [month, day, year] = input.split('/');
-    return `${year}-${month}-${day}`;
-  },
-  uppercase(input) {
-    return input.toUpperCase();
-  },
-  number(input) {
-    return parseFloat(input);
-  },
-};
-
-class AddUser extends React.Component {
-   
-  handleSubmit = async (event) => {
-    event.preventDefault();
-    const form = event.target;
-    const data = new FormData(form);
-    for (let name of data.keys()) {
-      const input = form.elements[name];
-      const parserName = input.dataset.parse;
-      if (parserName) {
-        const parser = inputParsers[parserName];
-        const parsedValue = parser(data.get(name));
-        data.set(name, parsedValue);
+class AddUser extends Component {
+    constructor(props) {
+     super(props);
+     this.state = {     
+        id: '',
+        name: 'hasan reza',
+        username: 'hasan_reza',
+        password: '123456',
+        dob: '1983/01/05',
+        sex: 'male',
+        userEmails: [],
+        userPhones: []
       }
     }
 
-    var id  = (data.get("id")) ? data.get("id") :  null ; 
-    var name = data.get("name");
-    var username = data.get("username");
-    var password = data.get("password");
-    var dob = data.get("dob");
-    var sex = data.get("sex");
-    var userEmails = data.get("userEmails");
-    var userPhones = data.get("userPhones");
+  async componentDidMount() {
+
+if (this.props.match.params.id) {
+
+  var users =  await this.props.client.query({
+    query: getUserQuery,        
+    variables: {
+        id: this.props.match.params.id
+    }       
+  });
+
+
+var arrEmails = [];
+users.data.getUser.userEmails.map(function(item) {
+  arrEmails.push(item.email);   
+});
+var userEmails = arrEmails.join(', ');
+
+
+var arrPhones = [];
+users.data.getUser.userPhones.map(function(item) {
+  arrPhones.push(item.phone);   
+});
+var userPhones = arrPhones.join(', ');
+
+  this.setState(function(prevState, props){
+      return {
+        id: users.data.getUser.id,
+        name: users.data.getUser.name,
+        username: users.data.getUser.username,
+        password: users.data.getUser.password,
+        sex: users.data.getUser.sex,
+        dob: users.data.getUser.dob,
+        userEmails : userEmails,
+        userPhones : userPhones
+         }
+   });
+}
+}
+
+  _save = async () => {
+   
+   const { id, name, username, password, dob, sex } = this.state;
+   var { userEmails, userPhones  } = this.state;
+
+   console.log(userEmails);
+   console.log(userPhones);
+
     var arrEmails = [];
     userEmails.split(',').map(function(item) {
       let temp = {};
       temp["email"] = item.trim();
       arrEmails.push(temp);
     });
+    
     userEmails = arrEmails;
+
     var arrPhones = [];
     userPhones.split(',').map(function(item) {
       let temp = {};
       temp["phone"] = item.trim();
       arrPhones.push(temp);
     });
-    userPhones = arrPhones;
+
+     userPhones = arrPhones;
+ 
     var response; 
 
     if (!id) {
@@ -88,18 +120,61 @@ class AddUser extends React.Component {
 
   render() {
     return (
-      <form onSubmit={(e)=> this.handleSubmit(e)} > 
-        <input name="id" placeholder='Your ID' type='text'/> 
-        <input name="name" placeholder='Your name' type='text'/> 
-        <input name="username" placeholder='Your username' type='text'/> 
-        <input name="password" placeholder='Choose a safe password' type='password'/> 
-        <input name="sex" placeholder='Gender' type='text'/> 
-        <input data-parse="date" name="dob" placeholder='Date of birth' type='text'/> 
-        <input name="userEmails" placeholder='Emails' type='text'/> 
-        <input name="userPhones" placeholder='Phones' type='text'/> 
-        <button type="submit">Add User!</button>
-      </form>
-    );
+      <div>
+        <h4 >Add user</h4>
+        <div >
+          <input name="id" value={this.state.id}  placeholder='Your ID' type='text'/> 
+          <input
+            value={this.state.name}
+            onChange={(e) => this.setState({ name: e.target.value })}
+            type='text'
+            placeholder='Your name'
+          />
+          <input
+            value={this.state.username}
+            onChange={(e) => this.setState({ username: e.target.value })}
+            type='text'
+            placeholder='Your username'
+          />
+          <input
+            value={this.state.password}
+            onChange={(e) => this.setState({ password: e.target.value })}
+            type='password'
+            placeholder='Choose a safe password'
+          />
+
+           <input
+            value={this.state.dob}
+            onChange={(e) => this.setState({ dob: e.target.value })}
+            type='text'
+            placeholder='Date of birth'
+          />
+
+           <input
+            value={this.state.sex}
+            onChange={(e) => this.setState({ sex: e.target.value })}
+            type='text'
+            placeholder='Gender'
+          />
+
+
+           <input
+            value={this.state.userEmails}
+            onChange={(e) => this.setState({ userEmails: e.target.value })}
+            type='text'
+            placeholder='Emails'
+          />
+
+           <input
+            value={this.state.userPhones}
+            onChange={(e) => this.setState({ userPhones: e.target.value })}
+            type='text'
+            placeholder='Phones'
+          />  
+        </div>       
+    <input type="button"  onClick={(e) => this._save(e)} value="Add UIser" />
+      </div>
+    )
   }
 }
 
@@ -119,6 +194,9 @@ mutation CreateUser( $name: String!, $username: String!, $password: String!, $do
     username
     userEmails{
       email
+    }
+     userPhones{
+      phone
     }
   } 
 }
@@ -143,11 +221,46 @@ mutation ( $name: String!, $username: String!, $password: String!, $dob: String!
     userEmails{
       email
     }
+    userPhones{
+      phone
+    }
   } 
 }
 `;
 
-export default compose(
-  graphql(addUserMutation, { name: 'addUserMutation' }),
-  graphql(updateUserMutation, { name: 'updateUserMutation' })  
-)(AddUser)
+const getUserQuery = gql `
+query getUser ($id :Int){
+  getUser(id:$id) {
+    id
+    name
+    username
+    password
+    dob
+    sex
+    userEmails{
+      email
+    }
+    userPhones{
+      phone
+    }
+  }
+}
+`;
+
+propTypes: {
+    data: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      userEmails: PropTypes.array.isRequired
+    })
+}
+
+
+export default compose( 
+    graphql(addUserMutation, {
+        name: 'addUserMutation'
+    }),
+    graphql(updateUserMutation, {
+        name: 'updateUserMutation'
+    })
+)(withApollo(AddUser));
