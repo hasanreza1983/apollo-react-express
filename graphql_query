@@ -1,0 +1,121 @@
+mutation {
+  updateUser(input:{
+    username:"update",
+    password:"update123"
+    dob:"1983/09/09"
+    sex: "male"
+    name:"hasan reza"
+    userEmails:[{email:"update@gmail.com"}]
+    userPhones:[{phone:"987654321"}]
+  },
+    id:20
+  ) 
+}
+
+===================================
+mutation
+{
+  deleteUser(id:20) {
+    success
+  }
+}
+
+========================================
+mutation CreateUser( $name: String!, $username: String!, $password: String!, $dob: String! , $sex: String! , $userEmails:[inputUserEmail]!, $userPhones:[inputUserPhone]!) {
+  createUser(input:{
+    username:$username
+    password: $password
+    dob:$dob
+    sex:$sex,
+    name: $name
+    userEmails:$userEmails
+    userPhones:$userPhones
+
+  }) {
+    id
+    name
+    username
+    userEmails{
+      email
+    }
+
+  } 
+}
+-----------------QUERY VARIABLES------------------
+
+{
+  
+"name": "Hasan Reza" ,
+"username": "hasan" , 
+"password": "123456" , 
+"dob": "1983/01/05"  , 
+"sex": "male" , 
+"userEmails": [{"email":"asergis@gmail.com"},{"email":"asergis@yahoo.com"}],
+"userPhones": [{"phone": "7897894894894"},{"phone": "4645646746467496"}]
+}
+
+==========================
+
+query{
+  getUserList {
+    id
+    username
+    dob
+    sex
+    userEmails{
+      email
+    }
+    userPhones{
+      phone
+    }
+  }
+}
+
+==========================
+
+query{
+  getUser(id:2) {
+    id
+    username
+    dob
+    sex
+    userEmails{
+      email
+    }
+    userPhones{
+      phone
+    }
+  }
+}
+===============================
+
+mutation ( $name: String!, $username: String!, $password: String!, $dob: String! , $sex: String! , $userEmails:[inputUserEmail]!, $userPhones:[inputUserPhone]!, $id: Int) {
+  updateUser(input:{
+    username:$username
+    password: $password
+    dob:$dob
+    sex:$sex,
+    name: $name
+    userEmails:$userEmails
+    userPhones:$userPhones
+  },
+    id: $id
+  ) {
+    success
+  } 
+}
+
+-------------
+
+{  
+"name": "Hasan Reza" ,
+"username": "hasan" , 
+"password": "123456" , 
+"dob": "1983/01/05"  , 
+"sex": "male" , 
+"userEmails": [{"email":"asergis@gmail.com"},{"email":"asergis@yahoo.com"}],
+"userPhones": [{"phone": "7897894894894"},{"phone": "4645646746467496"}],
+"id" : 41 
+}
+
+================

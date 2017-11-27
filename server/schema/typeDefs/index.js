@@ -15,8 +15,8 @@ const rootTypes = `
 
     type Mutation {
         createUser(input: inputUser): user
-        updateUser(input: inputUser, id:Int): result 
-        deleteUser(id : Int ): result
+        updateUser(input: inputUser, id:Int): user 
+        deleteUser(id : Int ): user
     }
 `;
 

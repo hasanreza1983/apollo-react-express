@@ -9,11 +9,8 @@ class UserList extends React.Component {
    
    constructor() {
         super();
-
         this.state = {selected: undefined};
-
     }
-
 
     render() {
         const users = this.props.data.getUserList;
@@ -37,11 +34,28 @@ class UserList extends React.Component {
                     let mailData = arrMails.map(email => (email.email));
                     return mailData.join(" | ");
                 }
+            },
+             {
+                Header: 'User Phones',
+                accessor: 'userPhones',
+                Cell: props => {
+                    let arrPhones = props.value;
+                    let phoneData = arrPhones.map(phone => (phone.phone));
+                    return phoneData.join(" | ");
+                }
+            },
+
+            {
+                Header: 'Action',
+                accessor: 'action',
+                Cell: props => {   
+                console.log(props.original.id);                 
+                    return <button data-action="edit">Edit { props.original.id}</button>;
+                }
             }
         ];
 
-        return ( <ReactTable 
-            data = { users } columns = { columns }  />
+        return ( <ReactTable  data = { users } columns = { columns }  />
         );
     }
 }

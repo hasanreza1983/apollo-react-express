@@ -13,7 +13,6 @@ const uri = isNotProduction ? 'http://localhost:3001/graphql' : process.env.REAC
 console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 console.log('GRAPHQL_URI', uri);
 
-
 // Apollo client
 const client = new ApolloClient({
   link: new HttpLink({ uri: uri }),
@@ -24,7 +23,7 @@ console.log('client', client);
 
 ReactDOM.render(
  	<ApolloProvider client={client}>
-        <App />
+     <App />
     </ApolloProvider>,
     document.getElementById('root')
 );
